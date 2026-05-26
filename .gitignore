@@ -1,0 +1,16 @@
+# Local agent/tooling folders
+.agents/
+.claude/
+.codex/
+
+# Generated knowledge graph output
+graphify-out/
+
+# Accidental OS/user tree that was previously (incorrectly) in the drive-root repo
+Users/
+
+# Windows / editor noise
+Thumbs.db
+Desktop.ini
+.DS_Store
+

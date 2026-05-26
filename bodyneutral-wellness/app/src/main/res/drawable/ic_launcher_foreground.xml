@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Circular aura ring behind the figure -->
+    <path
+        android:pathData="M54,28
+            A26,26,0,1,1,53.99,28"
+        android:fillColor="#00000000"
+        android:strokeWidth="0.8"
+        android:strokeColor="#80FFFFFF" />
+
+    <!-- Sparkle dots around the aura (top, right, bottom-right, left, top-left, etc.) -->
+    <path android:pathData="M54,26 m-1,0 a1,1,0,1,1,2,0 a1,1,0,1,1,-2,0"
+        android:fillColor="#CCFFFFFF" />
+    <path android:pathData="M70,32 m-0.8,0 a0.8,0.8,0,1,1,1.6,0 a0.8,0.8,0,1,1,-1.6,0"
+        android:fillColor="#AAFFFFFF" />
+    <path android:pathData="M78,44 m-1,0 a1,1,0,1,1,2,0 a1,1,0,1,1,-2,0"
+        android:fillColor="#CCFFFFFF" />
+    <path android:pathData="M80,54 m-0.7,0 a0.7,0.7,0,1,1,1.4,0 a0.7,0.7,0,1,1,-1.4,0"
+        android:fillColor="#AAFFFFFF" />
+    <path android:pathData="M76,66 m-0.8,0 a0.8,0.8,0,1,1,1.6,0 a0.8,0.8,0,1,1,-1.6,0"
+        android:fillColor="#CCFFFFFF" />
+    <path android:pathData="M66,76 m-1,0 a1,1,0,1,1,2,0 a1,1,0,1,1,-2,0"
+        android:fillColor="#AAFFFFFF" />
+    <path android:pathData="M42,76 m-0.8,0 a0.8,0.8,0,1,1,1.6,0 a0.8,0.8,0,1,1,-1.6,0"
+        android:fillColor="#CCFFFFFF" />
+    <path android:pathData="M30,66 m-1,0 a1,1,0,1,1,2,0 a1,1,0,1,1,-2,0"
+        android:fillColor="#AAFFFFFF" />
+    <path android:pathData="M27,54 m-0.7,0 a0.7,0.7,0,1,1,1.4,0 a0.7,0.7,0,1,1,-1.4,0"
+        android:fillColor="#CCFFFFFF" />
+    <path android:pathData="M30,42 m-0.8,0 a0.8,0.8,0,1,1,1.6,0 a0.8,0.8,0,1,1,-1.6,0"
+        android:fillColor="#AAFFFFFF" />
+    <path android:pathData="M38,32 m-1,0 a1,1,0,1,1,2,0 a1,1,0,1,1,-2,0"
+        android:fillColor="#CCFFFFFF" />
+
+    <!-- Additional tiny sparkle stars -->
+    <path android:pathData="M62,29 m-0.5,0 a0.5,0.5,0,1,1,1,0 a0.5,0.5,0,1,1,-1,0"
+        android:fillColor="#99FFFFFF" />
+    <path android:pathData="M75,38 m-0.5,0 a0.5,0.5,0,1,1,1,0 a0.5,0.5,0,1,1,-1,0"
+        android:fillColor="#99FFFFFF" />
+    <path android:pathData="M78,60 m-0.5,0 a0.5,0.5,0,1,1,1,0 a0.5,0.5,0,1,1,-1,0"
+        android:fillColor="#99FFFFFF" />
+    <path android:pathData="M46,28 m-0.5,0 a0.5,0.5,0,1,1,1,0 a0.5,0.5,0,1,1,-1,0"
+        android:fillColor="#99FFFFFF" />
+    <path android:pathData="M33,38 m-0.5,0 a0.5,0.5,0,1,1,1,0 a0.5,0.5,0,1,1,-1,0"
+        android:fillColor="#99FFFFFF" />
+    <path android:pathData="M28,48 m-0.5,0 a0.5,0.5,0,1,1,1,0 a0.5,0.5,0,1,1,-1,0"
+        android:fillColor="#99FFFFFF" />
+
+    <!-- Meditation figure - head -->
+    <path
+        android:pathData="M54,36 m-3.5,0 a3.5,3.5,0,1,1,7,0 a3.5,3.5,0,1,1,-7,0"
+        android:fillColor="#F0FFFFFF" />
+
+    <!-- Meditation figure - body/torso -->
+    <path
+        android:pathData="M54,40
+            C52,40 49,42 47,46
+            C45.5,49 44.5,52 44,54
+            L44,56
+            C44.5,57 46,58 48,58.5
+            C50,59 52,59 54,59
+            C56,59 58,59 60,58.5
+            C62,58 63.5,57 64,56
+            L64,54
+            C63.5,52 62.5,49 61,46
+            C59,42 56,40 54,40Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="54"
+                android:startY="38"
+                android:endX="54"
+                android:endY="60"
+                android:type="linear">
+                <item android:color="#F5FFFFFF" android:offset="0.0" />
+                <item android:color="#DDFFFFFF" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Left arm reaching to left knee -->
+    <path
+        android:pathData="M48,48
+            C46,50 43,53 40,56
+            C38,58 36,59 35,60
+            C34.5,60.5 34,60 34.5,59.5
+            C35,59 36,58 37,57"
+        android:fillColor="#00000000"
+        android:strokeWidth="2.5"
+        android:strokeColor="#E8FFFFFF"
+        android:strokeLineCap="round" />
+
+    <!-- Right arm reaching to right knee -->
+    <path
+        android:pathData="M60,48
+            C62,50 65,53 68,56
+            C70,58 72,59 73,60
+            C73.5,60.5 74,60 73.5,59.5
+            C73,59 72,58 71,57"
+        android:fillColor="#00000000"
+        android:strokeWidth="2.5"
+        android:strokeColor="#E8FFFFFF"
+        android:strokeLineCap="round" />
+
+    <!-- Crossed legs - left leg -->
+    <path
+        android:pathData="M46,56
+            C44,58 42,62 40,64
+            C38,66 36,68 36,69
+            C36,70 37,70.5 38,70
+            C40,69 44,67 48,66
+            C50,65 52,65 54,65">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="46"
+                android:startY="56"
+                android:endX="46"
+                android:endY="70"
+                android:type="linear">
+                <item android:color="#DDFFFFFF" android:offset="0.0" />
+                <item android:color="#BBFFFFFF" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Crossed legs - right leg -->
+    <path
+        android:pathData="M62,56
+            C64,58 66,62 68,64
+            C70,66 72,68 72,69
+            C72,70 71,70.5 70,70
+            C68,69 64,67 60,66
+            C58,65 56,65 54,65">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="62"
+                android:startY="56"
+                android:endX="62"
+                android:endY="70"
+                android:type="linear">
+                <item android:color="#DDFFFFFF" android:offset="0.0" />
+                <item android:color="#BBFFFFFF" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Subtle golden glow behind figure -->
+    <path
+        android:pathData="M44,42 Q54,34 64,42 Q68,52 64,62 Q54,70 44,62 Q40,52 44,42Z"
+        android:fillColor="#10FFD700" />
+
+</vector>
