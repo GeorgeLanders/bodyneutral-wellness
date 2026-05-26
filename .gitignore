@@ -14,3 +14,7 @@ Thumbs.db
 Desktop.ini
 .DS_Store
 
+# Local-only assistant config / bootstrap scripts (don’t publish by default)
+AGENTS.md
+CLAUDE.md
+install.cmd
