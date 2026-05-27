@@ -2,9 +2,12 @@ import http from "node:http";
 
 const port = Number(process.env.PORT || 8787);
 const provider = (process.env.AI_PROVIDER || "openai").toLowerCase();
-const openaiModel = process.env.OPENAI_MODEL || "gpt-4.1-mini";
+const openaiModel = process.env.OPENAI_MODEL || "gpt-4o-mini";
 const opencodeBaseUrl = (process.env.OPENCODE_BASE_URL || "https://opencode.ai/zen/v1").replace(/\/+$/, "");
 const opencodeModel = process.env.OPENCODE_MODEL || "big-pickle";
+
+const ipRequests = new Map();
+setInterval(() => ipRequests.clear(), 60000);
 
 function readJson(req) {
   return new Promise((resolve, reject) => {
@@ -55,7 +58,7 @@ async function createCoachReplyOpenAIResponses({ message, profile, style }) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("OPENAI_API_KEY is not set on the proxy server.");
 
-  const response = await fetch("https://api.openai.com/v1/responses", {
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${apiKey}`,
@@ -63,19 +66,11 @@ async function createCoachReplyOpenAIResponses({ message, profile, style }) {
     },
     body: JSON.stringify({
       model: openaiModel,
-      instructions: buildInstructions(style),
-      input: [
-        {
-          role: "user",
-          content: [
-            {
-              type: "input_text",
-              text: JSON.stringify({ message, profile })
-            }
-          ]
-        }
+      messages: [
+        { role: "system", content: buildInstructions(style) },
+        { role: "user", content: JSON.stringify({ message, profile }) }
       ],
-      max_output_tokens: 220
+      max_tokens: 220
     })
   });
 
@@ -84,10 +79,11 @@ async function createCoachReplyOpenAIResponses({ message, profile, style }) {
     throw new Error(data?.error?.message || `OpenAI API error ${response.status}`);
   }
 
-  return data.output_text || data.output?.flatMap((item) => item.content || [])
-    .map((content) => content.text || "")
-    .join("")
-    .trim();
+  const content = data?.choices?.[0]?.message?.content;
+  if (typeof content !== "string" || !content.trim()) {
+    throw new Error("Unexpected OpenAI response format (missing choices[0].message.content).");
+  }
+  return content.trim();
 }
 
 async function createCoachReplyOpenCodeZen({ message, profile, style }) {
@@ -128,8 +124,32 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  if (req.method !== "POST" || req.url !== "/ai-coach") {
+  const pathname = req.url.split("?")[0].replace(/\/+$/, "");
+  if (req.method === "GET" && (pathname === "" || pathname === "/ai-coach")) {
+    sendJson(res, 200, { status: "online", message: "Body-Neutral AI Coach Proxy is running!" });
+    return;
+  }
+
+  if (req.method !== "POST") {
     sendJson(res, 404, { error: "Use POST /ai-coach" });
+    return;
+  }
+  if (pathname !== "/ai-coach" && pathname !== "") {
+    sendJson(res, 404, { error: "Use POST /ai-coach" });
+    return;
+  }
+
+  const clientIp = req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress;
+  const count = ipRequests.get(clientIp) || 0;
+  if (count >= 5) {
+    sendJson(res, 429, { error: "Too many requests. Please wait a minute." });
+    return;
+  }
+  ipRequests.set(clientIp, count + 1);
+
+  const expectedSecret = process.env.APP_SECRET;
+  if (expectedSecret && req.headers["x-app-secret"] !== expectedSecret) {
+    sendJson(res, 403, { error: "Forbidden: Invalid app secret" });
     return;
   }
 
@@ -145,6 +165,7 @@ const server = http.createServer(async (req, res) => {
       : await createCoachReplyOpenAIResponses(payload);
     sendJson(res, 200, { reply });
   } catch (error) {
+    console.error("AI coach proxy failed:", error);
     sendJson(res, 500, { error: error.message || "AI coach proxy failed." });
   }
 });
