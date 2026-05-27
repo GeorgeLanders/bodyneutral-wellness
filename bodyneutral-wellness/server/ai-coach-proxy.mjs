@@ -70,7 +70,7 @@ async function createCoachReplyOpenAIResponses({ message, profile, style }) {
         { role: "system", content: buildInstructions(style) },
         { role: "user", content: JSON.stringify({ message, profile }) }
       ],
-      max_tokens: 220
+      max_tokens: 1500
     })
   });
 
@@ -102,7 +102,7 @@ async function createCoachReplyOpenCodeZen({ message, profile, style }) {
         { role: "system", content: buildInstructions(style) },
         { role: "user", content: JSON.stringify({ message, profile }) }
       ],
-      max_tokens: 220
+      max_tokens: 1500
     })
   });
 
