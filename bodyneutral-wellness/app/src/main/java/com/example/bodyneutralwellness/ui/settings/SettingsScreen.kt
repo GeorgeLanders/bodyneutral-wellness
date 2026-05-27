@@ -262,7 +262,7 @@ fun SettingsScreen(
                         label = { Text("Private proxy URL") },
                         placeholder = { Text("https://your-domain.example/ai-coach") },
                         supportingText = {
-                            Text("Leave blank to use offline support. Do not paste API keys here.")
+                            Text("Debug builds default to http://10.0.2.2:8787/ai-coach when blank (Android emulator). For BlueStacks or a phone, use your PC's LAN IP (http://192.168.x.x:8787/ai-coach) or a hosted HTTPS proxy. Do not paste API keys here.")
                         },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true

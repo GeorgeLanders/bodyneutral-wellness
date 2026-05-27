@@ -2,6 +2,7 @@ package com.example.bodyneutralwellness.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.bodyneutralwellness.BuildConfig
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import org.json.JSONArray
@@ -127,7 +128,8 @@ class WellnessPreferences(context: Context) {
         set(value) = prefs.edit().putBoolean(KEY_REMINDER_STRETCH, value).apply()
 
     var aiCoachProxyUrl: String
-        get() = prefs.getString(KEY_AI_COACH_PROXY_URL, "") ?: ""
+        get() = prefs.getString(KEY_AI_COACH_PROXY_URL, null)
+            ?: (if (BuildConfig.DEBUG) "http://10.0.2.2:8787/ai-coach" else "")
         set(value) = prefs.edit().putString(KEY_AI_COACH_PROXY_URL, value).apply()
 
     fun getCoachTopics(): List<String> {
