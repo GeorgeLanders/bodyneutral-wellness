@@ -23,6 +23,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import kotlinx.coroutines.launch
 import androidx.compose.ui.platform.LocalContext
 import com.example.bodyneutralwellness.data.AiCoachContext
@@ -143,6 +148,7 @@ fun CoachScreen(
             .fillMaxSize()
             .background(WellnessBackgroundBrush())
             .padding(16.dp)
+            .imePadding()
     ) {
         // Header
         Row(
@@ -336,7 +342,7 @@ fun CoachScreen(
 
         // Input area
         Row(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 60.dp),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             OutlinedTextField(
@@ -350,6 +356,13 @@ fun CoachScreen(
                     unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     focusedBorderColor = MaterialTheme.colorScheme.primary,
                     unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant
+                ),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Send,
+                    keyboardType = KeyboardType.Text
+                ),
+                keyboardActions = KeyboardActions(
+                    onSend = { sendMessage(inputText) }
                 ),
                 singleLine = false,
                 maxLines = 3
