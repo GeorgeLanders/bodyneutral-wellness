@@ -1,7 +1,10 @@
 import http from "node:http";
 
 const port = Number(process.env.PORT || 8787);
-const model = process.env.OPENAI_MODEL || "gpt-4.1-mini";
+const provider = (process.env.AI_PROVIDER || "openai").toLowerCase();
+const openaiModel = process.env.OPENAI_MODEL || "gpt-4.1-mini";
+const opencodeBaseUrl = (process.env.OPENCODE_BASE_URL || "https://opencode.ai/zen/v1").replace(/\/+$/, "");
+const opencodeModel = process.env.OPENCODE_MODEL || "big-pickle";
 
 function readJson(req) {
   return new Promise((resolve, reject) => {
@@ -34,11 +37,23 @@ function sendJson(res, status, payload) {
   res.end(JSON.stringify(payload));
 }
 
-async function createCoachReply({ message, profile, style }) {
+function buildInstructions(style) {
+  return [
+    "You are an empathetic body-neutral wellness coach.",
+    "Weight management may be discussed as an optional user goal, but never with shame, extreme dieting, or guaranteed outcomes.",
+    "Emphasize sustainable habits: nourishment, hydration, sleep, stress care, movement, consistency, and medical-professional support when needed.",
+    "Do not diagnose, prescribe, or make medical claims.",
+    "Keep replies concise, practical, inclusive, and emotionally steady.",
+    "For crisis, self-harm, medical emergency, or immediate danger, tell the user to contact local emergency services or a trusted person now.",
+    style || ""
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
+async function createCoachReplyOpenAIResponses({ message, profile, style }) {
   const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
-    throw new Error("OPENAI_API_KEY is not set on the proxy server.");
-  }
+  if (!apiKey) throw new Error("OPENAI_API_KEY is not set on the proxy server.");
 
   const response = await fetch("https://api.openai.com/v1/responses", {
     method: "POST",
@@ -47,16 +62,8 @@ async function createCoachReply({ message, profile, style }) {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      model,
-      instructions: [
-        "You are an empathetic body-neutral wellness coach.",
-        "Weight management may be discussed as an optional user goal, but never with shame, extreme dieting, or guaranteed outcomes.",
-        "Emphasize sustainable habits: nourishment, hydration, sleep, stress care, movement, consistency, and medical-professional support when needed.",
-        "Do not diagnose, prescribe, or make medical claims.",
-        "Keep replies concise, practical, inclusive, and emotionally steady.",
-        "For crisis, self-harm, medical emergency, or immediate danger, tell the user to contact local emergency services or a trusted person now.",
-        style || ""
-      ].join("\n"),
+      model: openaiModel,
+      instructions: buildInstructions(style),
       input: [
         {
           role: "user",
@@ -83,6 +90,38 @@ async function createCoachReply({ message, profile, style }) {
     .trim();
 }
 
+async function createCoachReplyOpenCodeZen({ message, profile, style }) {
+  const apiKey = process.env.OPENCODE_API_KEY;
+  if (!apiKey) throw new Error("OPENCODE_API_KEY is not set on the proxy server.");
+
+  const response = await fetch(`${opencodeBaseUrl}/chat/completions`, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${apiKey}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: opencodeModel,
+      messages: [
+        { role: "system", content: buildInstructions(style) },
+        { role: "user", content: JSON.stringify({ message, profile }) }
+      ],
+      max_tokens: 220
+    })
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data?.error?.message || `OpenCode Zen API error ${response.status}`);
+  }
+
+  const content = data?.choices?.[0]?.message?.content;
+  if (typeof content !== "string" || !content.trim()) {
+    throw new Error("Unexpected Zen response format (missing choices[0].message.content).");
+  }
+  return content.trim();
+}
+
 const server = http.createServer(async (req, res) => {
   if (req.method === "OPTIONS") {
     sendJson(res, 204, {});
@@ -101,7 +140,9 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    const reply = await createCoachReply(payload);
+    const reply = provider === "opencode"
+      ? await createCoachReplyOpenCodeZen(payload)
+      : await createCoachReplyOpenAIResponses(payload);
     sendJson(res, 200, { reply });
   } catch (error) {
     sendJson(res, 500, { error: error.message || "AI coach proxy failed." });
@@ -109,5 +150,5 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(port, () => {
-  console.log(`AI coach proxy listening on http://localhost:${port}/ai-coach`);
+  console.log(`AI coach proxy listening on http://localhost:${port}/ai-coach (provider=${provider})`);
 });

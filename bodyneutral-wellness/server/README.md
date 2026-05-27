@@ -9,6 +9,19 @@ $env:OPENAI_API_KEY = "your-rotated-server-side-key"
 npm start
 ```
 
+## Use OpenCode Zen (Big Pickle)
+
+OpenCode the desktop app can run “offline”, but hosted models like **Big Pickle** still require network access. To use Big Pickle from your app, have this proxy call Zen server-side.
+
+```powershell
+$env:AI_PROVIDER = "opencode"
+$env:OPENCODE_API_KEY = "your-opencode-key"
+$env:OPENCODE_MODEL = "big-pickle"
+# optional:
+# $env:OPENCODE_BASE_URL = "https://opencode.ai/zen/v1"
+npm start
+```
+
 Then set the Android app's Settings > AI Coach Connection > Private proxy URL to:
 
 ```text
