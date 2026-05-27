@@ -113,7 +113,7 @@ async function createCoachReplyOpenCodeZen({ message, profile, style }) {
 
   const content = data?.choices?.[0]?.message?.content;
   if (typeof content !== "string" || !content.trim()) {
-    throw new Error("Unexpected Zen response format (missing choices[0].message.content).");
+    throw new Error(`Unexpected Zen response format (missing choices[0].message.content): ${JSON.stringify(data)}`);
   }
   return content.trim();
 }
